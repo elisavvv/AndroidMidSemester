@@ -9,6 +9,7 @@ import kotlinx.coroutines.flow.update
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Collections
+import androidx.core.content.edit
 
 class SharedPrefTeamSelectionRepository(
     context: Context
@@ -16,7 +17,7 @@ class SharedPrefTeamSelectionRepository(
 
     private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
 
-    private val _selectedTeams = MutableStateFlow<Map<Long, Team>>(loadTeams())
+    private val _selectedTeams = MutableStateFlow(loadTeams())
     override val selectedTeams = _selectedTeams.asStateFlow()
 
     override fun setSelected(team: Team, selected: Boolean) {
@@ -29,7 +30,9 @@ class SharedPrefTeamSelectionRepository(
 
     override fun clear() {
         _selectedTeams.value = emptyMap()
-        prefs.edit().remove(KEY_SELECTED_TEAMS).apply()
+        prefs.edit {
+            remove(KEY_SELECTED_TEAMS)
+        }
     }
 
     private fun saveTeams(teams: Map<Long, Team>) {
@@ -42,7 +45,9 @@ class SharedPrefTeamSelectionRepository(
             }
             jsonArray.put(jsonObject)
         }
-        prefs.edit().putString(KEY_SELECTED_TEAMS, jsonArray.toString()).apply()
+        prefs.edit {
+            putString(KEY_SELECTED_TEAMS, jsonArray.toString())
+        }
     }
 
     private fun loadTeams(): Map<Long, Team> {
