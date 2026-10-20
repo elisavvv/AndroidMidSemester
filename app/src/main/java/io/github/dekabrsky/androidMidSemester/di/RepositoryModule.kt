@@ -3,6 +3,8 @@ package io.github.dekabrsky.androidMidSemester.di
 import io.github.dekabrsky.androidMidSemester.data.cache.MatchesMemoryCache
 import io.github.dekabrsky.androidMidSemester.data.repository.CountriesRepositoryImpl
 import io.github.dekabrsky.androidMidSemester.data.repository.InMemoryTeamSelectionRepository
+import io.github.dekabrsky.androidMidSemester.data.repository.SharedPrefTeamSelectionRepository
+import org.koin.android.ext.koin.androidContext
 import io.github.dekabrsky.androidMidSemester.data.repository.MatchRepositoryImpl
 import io.github.dekabrsky.androidMidSemester.data.repository.TeamsRepositoryImpl
 import io.github.dekabrsky.androidMidSemester.data.source.EspnMatchesRemoteDataSource
@@ -25,5 +27,5 @@ val repositoryModule = module {
     single { MatchesMemoryCache() }
     single<MatchRepository> { MatchRepositoryImpl(get(), get()) }
     single<TeamsRepository> { TeamsRepositoryImpl(get()) }
-    single<TeamSelectionRepository> { InMemoryTeamSelectionRepository() }
+    single<TeamSelectionRepository> { SharedPrefTeamSelectionRepository(androidContext()) }
 }
